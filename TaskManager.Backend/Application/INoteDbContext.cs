@@ -1,15 +1,11 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application
+namespace TaskManager.Application
 {
-    public interface INoteDbContext
+    public interface INotesDbContext
     {
-        public DbSet<Note>
+        DbSet<Note> Notes { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

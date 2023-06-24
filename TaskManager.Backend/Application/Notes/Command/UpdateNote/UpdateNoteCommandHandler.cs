@@ -1,11 +1,8 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Application.Notes.Command.UpdateNote
+namespace TaskManager.Application.Notes.Command.UpdateNote
 {
     public class UpdateNoteCommandHandler : IRequestHandler<UpdateNoteCommand>
     {
@@ -13,11 +10,24 @@ namespace Application.Notes.Command.UpdateNote
 
         public UpdateNoteCommandHandler(INotesDbContext notesDbContext)
         {
-            this._notesDbContext = notesDbContext;
+            _notesDbContext = notesDbContext;
         }
-        public Task Handle(UpdateNoteCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateNoteCommand request, CancellationToken cancellationToken)
         {
-            
+            Note? entityNote =
+                await _notesDbContext.Notes.FirstOrDefaultAsync(note =>
+                    note.Id == request.Id, cancellationToken);
+
+            if (entityNote == null)
+            {
+                throw new ArgumentNullException(nameof(entityNote));
+            }
+
+            entityNote.Description = request.Description;
+            entityNote.Title = request.Title;
+            entityNote.Status = request.Status;
+
+            await _notesDbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

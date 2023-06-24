@@ -1,13 +1,18 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Notes.Command.CreateNote
+namespace TaskManager.Application.Notes.Command.CreateNote
 {
     public class CreateNoteCommandHandlerValidator: AbstractValidator<CreateNoteCommand>
     {
+        public CreateNoteCommandHandlerValidator()
+        {
+
+            RuleFor(createNoteCommand =>
+                createNoteCommand.Title).NotEmpty().MinimumLength(200);
+            RuleFor(createNoteCommand =>
+                createNoteCommand.UserId).NotEqual(Guid.Empty);
+            RuleFor(updateNoteCommand =>
+                updateNoteCommand.Status).NotEmpty();
+        }
     }
 }

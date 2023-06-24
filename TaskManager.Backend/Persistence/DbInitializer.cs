@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Persistence
+﻿namespace Persistence
 {
-    internal class DbInitializer
+    public class DbInitializer
     {
+        public static void DbInitialize(NotesDbContext notesDbContext) => notesDbContext.Database.EnsureCreated();
     }
 }

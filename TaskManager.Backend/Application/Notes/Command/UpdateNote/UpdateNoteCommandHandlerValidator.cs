@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
 
-namespace Application.Notes.Command.UpdateNote
+namespace TaskManager.Application.Notes.Command.UpdateNote
 {
-    internal class UpdateNoteCommandHandlerValidator
+    public class UpdateNoteCommandHandlerValidator: AbstractValidator<UpdateNoteCommand>
     {
+        public UpdateNoteCommandHandlerValidator()
+        {
+            RuleFor(updateNoteCommand =>
+                updateNoteCommand.Id).NotEqual(Guid.Empty);
+            RuleFor(updateNoteCommand =>
+                updateNoteCommand.Title).NotEmpty().MinimumLength(250);
+            RuleFor(updateNoteCommand =>
+                updateNoteCommand.Status).NotEmpty();
+        }
     }
 }

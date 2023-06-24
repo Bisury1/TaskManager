@@ -1,23 +1,28 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain;
+using MediatR;
 
-namespace Application.Notes.Command.CreateNote
+namespace TaskManager.Application.Notes.Command.DeleteNote
 {
-    public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, Guid>
+    public class DeleteNoteCommandHandler : IRequestHandler<DeleteNoteCommand>
     {
         private readonly INotesDbContext _notesDbContext;
 
-        public CreateNoteCommandHandler(INotesDbContext notesDbContext)
+        public DeleteNoteCommandHandler(INotesDbContext notesDbContext)
         {
-            this._notesDbContext = notesDbContext;
+            _notesDbContext = notesDbContext;
         }
-        public Task<Guid> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteNoteCommand request, CancellationToken cancellationToken)
         {
-            
+            Note? entityNote = 
+                await _notesDbContext.Notes.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            if (entityNote == null || entityNote.UserId != request.UserId)
+            {
+                throw new ArgumentNullException(nameof(entityNote));
+            }
+
+            _notesDbContext.Notes.Remove(entityNote);
+            await _notesDbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
