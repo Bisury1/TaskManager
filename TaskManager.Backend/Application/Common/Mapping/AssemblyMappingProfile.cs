@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace TaskManager.Application.Common.Mapping
 {
-    public class AssemblyMapProfile: Profile
+    public class AssemblyMappingProfile: Profile
     {
-        public AssemblyMapProfile(Assembly assembly)
+        public AssemblyMappingProfile(Assembly assembly)
         {
             ApplyMappingFromAssembly(assembly);
         }

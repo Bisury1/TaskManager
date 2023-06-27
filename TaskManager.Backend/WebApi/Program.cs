@@ -1,6 +1,6 @@
-using Persistence;
+using TaskManager.Persistence;
 
-namespace WebApi
+namespace TaskManager.WebApi
 {
     public class Program
     {

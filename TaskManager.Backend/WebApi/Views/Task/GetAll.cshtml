@@ -1,0 +1,247 @@
+﻿@using TaskManager.Application.Notes.Queries.GetNoteList;
+
+@model TaskManager.Application.Notes.Queries.GetNoteList.NoteListVm
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Управление задачами</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .task-manager {
+      width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .task-manager h2 {
+      margin-bottom: 20px;
+    }
+
+    .task-form {
+      margin-bottom: 20px;
+    }
+
+    .task-form label {
+      display: block;
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    .task-form input[type="text"],
+    .task-form select {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .task-form textarea {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    .task-form input[type="submit"] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .task-form input[type="submit"]:hover {
+      background-color: #666;
+    }
+
+    .task-list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .task-list th,
+    .task-list td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .task-list th {
+      background-color: #f2f2f2;
+    }
+
+    .task-list tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .task-list tr:hover {
+      background-color: #f5f5f5;
+    }
+    .delete-task{
+    }
+  </style>
+</head>
+<body>
+  <div class="task-manager">
+    <h2>Управление задачами</h2>
+
+    <div class="task-form">
+      <h3>Создать новую задачу</h3>
+      <form action="/tasks/create" method="post">
+        <label for="title">Заголовок:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" required></textarea>
+
+        <label for="status">Статус:</label>
+        <select id="status" name="status">
+          <option value="Новая">Новая</option>
+          <option value="В работе">В работе</option>
+          <option value="Завершена">Завершена</option>
+        </select>
+        <input type="submit" value="Создать">
+      </form>
+    </div>
+
+    <table class="task-list">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Заголовок</th>
+          <th>Описание</th>
+          <th>Статус</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+          @foreach (NoteLookup item in Model.Notes)
+          {
+                <td>@item.Id</td>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>@item.Status</td>
+                <td>
+                <a href="/api/Task/Update/{@item.Id}">Редактировать</a>
+                <a class="delete-task">Удалить</a>
+                </td>
+          }
+          </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+            // Получаем ссылку на форму создания новой задачи
+    const createTaskForm = document.querySelector('.task-form form');
+
+    // Обработчик события отправки формы создания задачи
+    createTaskForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+        // Получаем данные из формы
+        const title = createTaskForm.querySelector('#title').value;
+        const description = createTaskForm.querySelector('#description').value;
+        const status = createTaskForm.querySelector('#status').value;
+
+        // Создаем объект с данными задачи
+        const taskData = {
+        title,
+        description,
+        status,
+        };
+
+        try {
+        // Отправляем запрос на сервер для создания новой задачи
+        const response = await fetch('/api/Task/Create', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(taskData),
+        });
+
+        if (response.ok) {
+            // Задача успешно создана, перезагружаем страницу
+            location.reload();
+        } else {
+            // Обработка ошибки
+            console.error('Ошибка при создании задачи');
+        }
+        } catch (error) {
+        console.error('Ошибка при отправке запроса', error);
+        }
+    });
+
+    // Обработчик события клика на кнопку "Удалить" для задачи
+    const deleteTaskButtons = document.querySelectorAll('.task-list .delete-task');
+
+    deleteTaskButtons.forEach((button) => {
+        button.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        // Получаем ID задачи из атрибута кнопки
+        const taskId = button.dataset.taskId;
+
+        try {
+            // Отправляем запрос на сервер для удаления задачи
+            const response = await fetch(`/api/Task/Delete/${taskId}`, {
+            method: 'DELETE',
+            });
+
+            if (response.ok) {
+            // Задача успешно удалена, перезагружаем страницу
+            location.reload();
+            } else {
+            // Обработка ошибки
+            console.error('Ошибка при удалении задачи');
+            }
+        } catch (error) {
+            console.error('Ошибка при отправке запроса', error);
+        }
+        });
+    });
+
+    // Обработчик события клика на кнопку "Редактировать" для задачи
+    const editTaskButtons = document.querySelectorAll('.task-list .edit-task');
+
+    editTaskButtons.forEach((button) => {
+        button.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        // Получаем ID задачи из атрибута кнопки
+        const taskId = button.dataset.taskId;
+
+        // Получаем данные задачи для редактирования
+        try {
+            const response = await fetch(`/api/Task/GetById/${taskId}`);
+
+            if (response.ok) {
+            const taskData = await response.json();
+
+            // Здесь можно выполнить дополнительные действия для редактирования задачи,
+            // например, заполнить форму данными задачи и отправить запрос на сервер
+            // для обновления задачи.
+            } else {
+            // Обработка ошибки
+            console.error('Ошибка при получении данных задачи');
+            }
+        } catch (error) {
+            console.error('Ошибка при отправке запроса', error);
+        }
+        });
+    });
+
+  </script>
+</body>
+</html>

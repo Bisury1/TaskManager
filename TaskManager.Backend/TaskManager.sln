@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskManager.Backend", "Task
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{2FF0CCEB-BB12-4B85-AE72-695E05274B46}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{774EC414-C67A-4AB6-96C3-857096026A63}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskManager.Infrastructure", "TaskManager.Infrastructure", "{774EC414-C67A-4AB6-96C3-857096026A63}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{10C55F82-3ED3-4EC6-BB71-52FDC779073F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C688FA94-0B70-443B-BC1F-BAFC4B69C948}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{DA91BCEA-1E15-48FE-BFE9-275E2A955D9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.WebApi", "WebApi\TaskManager.WebApi.csproj", "{DA91BCEA-1E15-48FE-BFE9-275E2A955D9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{ED4B1909-05F9-444D-8507-DF679A63E319}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{244B3DAC-FF80-44EA-AC7E-AF9B04B08988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Persistence", "Persistence\TaskManager.Persistence.csproj", "{244B3DAC-FF80-44EA-AC7E-AF9B04B08988}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Application", "Application\TaskManager.Application.csproj", "{DB9CE547-E519-4973-940F-5F0005A68B14}"
 EndProject

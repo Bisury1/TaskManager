@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.EntityNoteConfiguration
+namespace TaskManager.Persistence.EntityNoteConfiguration
 {
     internal class NoteConfiguration : IEntityTypeConfiguration<Note>
     {

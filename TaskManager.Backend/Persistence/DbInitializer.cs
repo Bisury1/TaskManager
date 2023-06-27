@@ -1,4 +1,4 @@
-﻿namespace Persistence
+﻿namespace TaskManager.Persistence
 {
     public class DbInitializer
     {

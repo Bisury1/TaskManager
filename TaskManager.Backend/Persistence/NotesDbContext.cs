@@ -1,11 +1,11 @@
 ﻿using TaskManager.Application;
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using Persistence.EntityNoteConfiguration;
+using TaskManager.Persistence.EntityNoteConfiguration;
 
-namespace Persistence
+namespace TaskManager.Persistence
 {
-    public class NotesDbContext: DbContext, INotesDbContext
+    public class NotesDbContext : DbContext, INotesDbContext
     {
         public DbSet<Note> Notes { get; set; }
         public NotesDbContext(DbContextOptions<NotesDbContext> dbContextOptions)

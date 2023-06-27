@@ -1,4 +1,4 @@
-namespace WebApi.Models
+namespace TaskManager.WebApi.Models
 {
     public class ErrorViewModel
     {
