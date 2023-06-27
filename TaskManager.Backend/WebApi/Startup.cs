@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,13 @@ namespace TaskManager.WebApi
                 options.UseSqlServer(connectionString));
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppUserDbContext>();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/api/Auth/Login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/api/Auth/Login";
+            });
+
             services.AddMvc();
             services.AddApplication();
             services.AddPersistence(Configuration);

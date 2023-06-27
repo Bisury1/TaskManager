@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.WebApi.ViewModels;
@@ -20,7 +21,7 @@ namespace TaskManager.WebApi.Controllers
         {
             return View();
         }
-        [HttpPost("model")]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -32,7 +33,7 @@ namespace TaskManager.WebApi.Controllers
                 {
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("/api/Auth/Login");
                 }
                 else
                 {
@@ -44,14 +45,13 @@ namespace TaskManager.WebApi.Controllers
             }
             return View(model);
         }
-        [HttpGet("returnUrl")]
+        [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl == null ? "/Home/Index" : returnUrl });
+            return View(new LoginViewModel { ReturnUrl = returnUrl == null ? "api/Task/GetAll" : returnUrl });
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace TaskManager.WebApi.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("/api/Task/GetAll");
                 }
             }
             else
@@ -86,13 +86,13 @@ namespace TaskManager.WebApi.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return Redirect("/api/Auth/Login");
         }
     }
 }

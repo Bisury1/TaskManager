@@ -15,8 +15,8 @@ namespace TaskManager.WebApi.Controllers
 
         public TaskController(IMapper mapper) => _mapper = mapper;
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public async Task<ActionResult<NoteListVm>> GetAll()
         {
             var query = new GetNoteListQuery
@@ -27,31 +27,41 @@ namespace TaskManager.WebApi.Controllers
             return View(vm);
         }
 
-        [HttpPost]
         [Authorize]
+        [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateNoteDto createNoteDto)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                Redirect("/api/Auth/Login");
+            }
             var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
             command.UserId = UserId;
             var noteId = await Mediator.Send(command);
-            return Redirect("api/Task/GetAll");
+            return RedirectToAction("GetAll", "Task");
         }
 
-       
-        [HttpPut]
         [Authorize]
+        [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateNoteDto updateNoteDto)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                Redirect("/api/Auth/Login");
+            }
             var command = _mapper.Map<UpdateNoteCommand>(updateNoteDto);
             await Mediator.Send(command);
             return Redirect("api/Task/GetAll");
         }
 
-        
-        [HttpDelete("{id}")]
         [Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                Redirect("/api/Auth/Login");
+            }
             var command = new DeleteNoteCommand
             {
                 Id = id,
