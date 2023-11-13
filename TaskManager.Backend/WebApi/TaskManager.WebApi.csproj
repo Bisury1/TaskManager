@@ -23,15 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Auth\Register.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
+    <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Task\GetAll.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Styles\app.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>

@@ -70,7 +70,7 @@ namespace TaskManager.WebApi
             {
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(env.ContentRootPath, "Styles")),
-                RequestPath = "/styles"
+                RequestPath = new PathString("/styles")
             });
 
             app.UseRouting();

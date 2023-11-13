@@ -16,11 +16,6 @@ namespace TaskManager.WebApi.Controllers
         {
             (_signInManager, _userManager) = (signInManager, userManager);
         }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -33,22 +28,16 @@ namespace TaskManager.WebApi.Controllers
                 {
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
-                    return Redirect("/api/Auth/Login");
+                    return Ok();
                 }
-                else
+
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View(model);
-        }
-        [HttpGet]
-        public IActionResult Login(string returnUrl = null)
-        {
-            return View(new LoginViewModel { ReturnUrl = returnUrl == null ? "api/Task/GetAll" : returnUrl });
+
+            return ValidationProblem();
         }
 
         [HttpPost]
@@ -56,33 +45,26 @@ namespace TaskManager.WebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return ValidationProblem();
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "User not found");
-                return View(model);
+                return Unauthorized();
             }
             var result =
                 await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
-                // проверяем, принадлежит ли URL приложению
-                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-                {
-                    return Redirect(model.ReturnUrl);
-                }
-                else
-                {
-                    return Redirect("/api/Task/GetAll");
-                }
+                return Ok();
             }
             else
             {
                 ModelState.AddModelError("", "Wrong username and/or password");
             }
-            return View(model);
+
+            return ValidationProblem();
         }
 
 
@@ -92,7 +74,7 @@ namespace TaskManager.WebApi.Controllers
         {
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
-            return Redirect("/api/Auth/Login");
+            return Ok();
         }
     }
 }

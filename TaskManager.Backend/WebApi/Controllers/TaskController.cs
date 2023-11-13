@@ -19,12 +19,17 @@ namespace TaskManager.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<NoteListVm>> GetAll()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+            
             var query = new GetNoteListQuery
             {
                 UserId = UserId
             };
             var vm = await Mediator.Send(query);
-            return View(vm);
+            return Json(vm);
         }
 
         [Authorize]
@@ -33,12 +38,13 @@ namespace TaskManager.WebApi.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                Redirect("/api/Auth/Login");
+                return Unauthorized();
             }
+            
             var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
             command.UserId = UserId;
             var noteId = await Mediator.Send(command);
-            return RedirectToAction("GetAll", "Task");
+            return Ok();
         }
 
         [Authorize]
@@ -51,7 +57,7 @@ namespace TaskManager.WebApi.Controllers
             }
             var command = _mapper.Map<UpdateNoteCommand>(updateNoteDto);
             await Mediator.Send(command);
-            return Redirect("api/Task/GetAll");
+            return Ok();
         }
 
         [Authorize]
@@ -68,7 +74,7 @@ namespace TaskManager.WebApi.Controllers
                 UserId = UserId
             };
             await Mediator.Send(command);
-            return Redirect("api/Task/GetAll");
+            return Ok();
         }
     }
 }
