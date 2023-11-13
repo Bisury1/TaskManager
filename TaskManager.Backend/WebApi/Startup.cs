@@ -30,7 +30,7 @@ namespace TaskManager.WebApi
             });
             var connectionString = Configuration["DefaultConnection"];
             services.AddDbContext<AppUserDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppUserDbContext>();
             services.ConfigureApplicationCookie(options =>
@@ -65,12 +65,6 @@ namespace TaskManager.WebApi
                 options.DocumentTitle = "Title";
                 options.RoutePrefix = string.Empty;
                 options.DocExpansion(DocExpansion.List);
-            });
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(env.ContentRootPath, "Styles")),
-                RequestPath = new PathString("/styles")
             });
 
             app.UseRouting();

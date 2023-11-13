@@ -12,7 +12,7 @@ namespace TaskManager.Persistence
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration["connection"];
-            services.AddDbContext<NotesDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<NotesDbContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<INotesDbContext>(provider => provider.GetService<NotesDbContext>());
             return services;
         }
@@ -20,7 +20,7 @@ namespace TaskManager.Persistence
         {
             var connectionString = configuration["DefaultConnection"];
             services.AddDbContext<AppUserDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
             services.AddIdentityCore<AppUser>()
                 .AddEntityFrameworkStores<AppUserDbContext>();
             return services;
